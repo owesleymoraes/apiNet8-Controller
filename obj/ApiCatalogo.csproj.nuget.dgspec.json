@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\app_web\\ApiNet8\\apicatalogo\\ApiCatalogo.csproj": {}
+    "D:\\app_web\\ApiNet8\\ApiCatalogo\\ApiCatalogo.csproj": {}
   },
   "projects": {
-    "D:\\app_web\\ApiNet8\\apicatalogo\\ApiCatalogo.csproj": {
+    "D:\\app_web\\ApiNet8\\ApiCatalogo\\ApiCatalogo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\app_web\\ApiNet8\\apicatalogo\\ApiCatalogo.csproj",
+        "projectUniqueName": "D:\\app_web\\ApiNet8\\ApiCatalogo\\ApiCatalogo.csproj",
         "projectName": "ApiCatalogo",
-        "projectPath": "D:\\app_web\\ApiNet8\\apicatalogo\\ApiCatalogo.csproj",
+        "projectPath": "D:\\app_web\\ApiNet8\\ApiCatalogo\\ApiCatalogo.csproj",
         "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
-        "outputPath": "D:\\app_web\\ApiNet8\\apicatalogo\\obj\\",
+        "outputPath": "D:\\app_web\\ApiNet8\\ApiCatalogo\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -45,6 +45,16 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
