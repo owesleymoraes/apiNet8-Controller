@@ -17,7 +17,11 @@ public class Product
     [Required]
     [StringLength(300)]
     public string? Description { get; set; }
+    [Required]
+    [Column(TypeName = "decimal(10,2)")]
     public decimal Price { get; set; }
+    [Required]
+    [StringLength(300)]
     public string? ImageUrl { get; set; }
     public float Stock { get; set; }
     public DateTime RegistrationDate { get; set; }
