@@ -1,6 +1,5 @@
 using apicatalogo.Models;
 using ApiCatalogo.Context;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,18 +17,25 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
-            var products = _context.Products.ToList();
-
-            if (products is null)
+            try
             {
-                return NotFound("Produtos não encontrados");
+                var products = await _context.Products.AsNoTracking().ToListAsync();
+
+                if (products is null)
+                {
+                    return NotFound("Produtos não encontrados");
+                }
+                return products;
             }
-            return products;
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um problema na solicitação");
+            }
         }
 
-        [HttpGet("{id}", Name = "GetById")]
+        [HttpGet("{id:min(1)}", Name = "GetById")]
         public ActionResult<Product> Get(int id)
         {
             var product = _context.Products.FirstOrDefault(products => products.ProductId == id);
@@ -66,6 +72,7 @@ namespace ApiCatalogo.Controllers
 
             return Ok(product);
         }
+
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
