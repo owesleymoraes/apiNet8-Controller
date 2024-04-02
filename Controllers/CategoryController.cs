@@ -1,6 +1,6 @@
-using System.Reflection.Metadata.Ecma335;
 using apicatalogo.Models;
 using ApiCatalogo.Context;
+using ApiCatalogo.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +18,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<Category>> Get()
         {
             var categories = _context.Categories.AsNoTracking().ToList();
