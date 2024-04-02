@@ -1,6 +1,6 @@
-using System.Reflection.Metadata.Ecma335;
 using apicatalogo.Models;
 using ApiCatalogo.Context;
+using ApiCatalogo.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +18,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<Category>> Get()
         {
             var categories = _context.Categories.AsNoTracking().ToList();
@@ -32,22 +33,14 @@ namespace ApiCatalogo.Controllers
         [HttpGet("{id}", Name = "GetCategoryById")]
         public ActionResult<Category> Get(int id)
         {
-            try
+
+            var category = _context.Categories.FirstOrDefault(category => category.CategoryId == id);
+
+            if (category == null)
             {
-                var category = _context.Categories.FirstOrDefault(category => category.CategoryId == id);
-
-                if (category == null)
-                {
-                    return NotFound("Categoria não encontrado");
-                }
-                return Ok(category);
-
+                return NotFound("Categoria não encontrado");
             }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um problema na solicitação");
-            }
-
+            return Ok(category);
         }
 
         [HttpPost]
