@@ -1,8 +1,7 @@
 using apicatalogo.Models;
-using ApiCatalogo.Context;
 using ApiCatalogo.Filters;
+using ApiCatalogo.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ApiCatalogo.Controllers
 {
@@ -10,36 +9,32 @@ namespace ApiCatalogo.Controllers
     [Route("[controller]")]
     public class CategoryController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ICategoryService _service;
+        private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(AppDbContext context)
+        public CategoryController(ICategoryService service, ILogger<CategoryController> logger)
         {
-            _context = context;
+            _service = service;
+            _logger = logger;
         }
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<Category>> Get()
         {
-            var categories = _context.Categories.AsNoTracking().ToList();
+            var categories = _service.GetCategories();
 
-            if (categories is null)
-            {
-                return NotFound("Categorias não encontradas");
-            }
-            return categories;
+            return Ok(categories);
         }
 
         [HttpGet("{id}", Name = "GetCategoryById")]
         public ActionResult<Category> Get(int id)
         {
+            var category = _service.GetCategory(id);
 
-            var category = _context.Categories.FirstOrDefault(category => category.CategoryId == id);
-
-            if (category == null)
-            {
+            if (category is null)
                 return NotFound("Categoria não encontrado");
-            }
+
             return Ok(category);
         }
 
@@ -47,13 +42,11 @@ namespace ApiCatalogo.Controllers
         public ActionResult Post(Category category)
         {
             if (category is null)
-            {
                 return BadRequest();
-            }
-            _context.Categories.Add(category);
-            _context.SaveChanges();
 
-            return new CreatedAtRouteResult("GetCategoryById", new { id = category.CategoryId }, category);
+            Category categoryModel = _service.Create(category);
+
+            return new CreatedAtRouteResult("GetCategoryById", new { id = categoryModel.CategoryId }, categoryModel);
         }
 
         [HttpPut("{id}")]
@@ -63,8 +56,8 @@ namespace ApiCatalogo.Controllers
             {
                 return BadRequest();
             }
-            _context.Entry(category).State = EntityState.Modified;
-            _context.SaveChanges();
+
+            _service.Update(category);
 
             return Ok(category);
         }
@@ -72,21 +65,17 @@ namespace ApiCatalogo.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Category> Delete(int id)
         {
-            var category = _context.Categories.FirstOrDefault(category => category.CategoryId == id);
-            if (category is null)
-            {
-                return NotFound("Categoria não localizada");
-            }
-            _context.Categories?.Remove(category);
-            _context.SaveChanges();
 
-            return Ok(category);
+            _service.Delete(id);
+
+            return Ok();
         }
 
         [HttpGet("products")]
         public ActionResult<IEnumerable<Category>> GetCategoriesAndProducts()
         {
-            return _context.Categories.Include(product => product.Products).ToList();
+            var categoriesAndProducts = _service.GetCategoriesAndProducts();
+            return Ok(categoriesAndProducts);
         }
     }
 }
