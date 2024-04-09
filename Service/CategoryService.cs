@@ -8,7 +8,7 @@ namespace ApiCatalogo.Service
     {
         private readonly ICategoryRepository _repository;
 
-        public CategoryService(CategoryRepository repository)
+        public CategoryService(ICategoryRepository repository)
         {
             _repository = repository;
         }
