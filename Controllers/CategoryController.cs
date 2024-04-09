@@ -57,9 +57,14 @@ namespace ApiCatalogo.Controllers
                 return BadRequest();
             }
 
-            _service.Update(category);
+            var updatedCategory = _service.Update(category);
 
-            return Ok(category);
+            if (updatedCategory == null)
+            {
+                return BadRequest("Id informado não corresponde a nenhum produto.");
+            }
+
+            return Ok(updatedCategory);
         }
 
         [HttpDelete("{id}")]

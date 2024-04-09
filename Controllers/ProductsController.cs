@@ -1,7 +1,6 @@
 using apicatalogo.Models;
-using ApiCatalogo.Context;
+using ApiCatalogo.Service;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace ApiCatalogo.Controllers
 {
@@ -9,36 +8,26 @@ namespace ApiCatalogo.Controllers
     [Route("[controller]")]
     public class ProductsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IProductService _service;
 
-        public ProductsController(AppDbContext context)
+        public ProductsController(IProductService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> Get()
+        public ActionResult<IEnumerable<Product>> Get()
         {
-            try
-            {
-                var products = await _context.Products.AsNoTracking().ToListAsync();
 
-                if (products is null)
-                {
-                    return NotFound("Produtos não encontrados");
-                }
-                return products;
-            }
-            catch (Exception)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Ocorreu um problema na solicitação");
-            }
+            var products = _service.GetProducts().ToList();
+            return Ok(products);
+
         }
 
         [HttpGet("{id:min(1)}", Name = "GetById")]
         public ActionResult<Product> Get(int id)
         {
-            var product = _context.Products.FirstOrDefault(products => products.ProductId == id);
+            var product = _service.GetProductById(id);
 
             if (product is null)
             {
@@ -54,10 +43,10 @@ namespace ApiCatalogo.Controllers
             {
                 return BadRequest();
             }
-            _context.Products.Add(product);
-            _context.SaveChanges();
 
-            return new CreatedAtRouteResult("GetById", new { id = product.ProductId }, product);
+            Product productResponse = _service.Create(product);
+
+            return new CreatedAtRouteResult("GetById", new { id = productResponse.ProductId }, productResponse);
         }
 
         [HttpPut("{id}")]
@@ -67,24 +56,30 @@ namespace ApiCatalogo.Controllers
             {
                 return BadRequest();
             }
-            _context.Entry(product).State = EntityState.Modified;
-            _context.SaveChanges();
 
-            return Ok(product);
+            var updatedProduct = _service.Update(product);
+
+            if (updatedProduct == null)
+            {
+                return BadRequest("Id informado não corresponde a nenhum produto.");
+            }
+
+
+            return Ok(updatedProduct);
         }
 
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            var product = _context.Products.FirstOrDefault(product => product.ProductId == id);
-            if (product is null)
-            {
-                return NotFound("Produto não localizado");
-            }
-            _context.Products.Remove(product);
-            _context.SaveChanges();
+            var deleteProduct = _service.Delete(id);
 
-            return Ok(product);
+            if (deleteProduct == null)
+            {
+                return BadRequest("Id informado não corresponde a nenhum produto.");
+            }
+
+            return Ok(deleteProduct);
+
         }
     }
 
