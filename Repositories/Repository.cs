@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 using ApiCatalogo.Context;
-using Microsoft.EntityFrameworkCore;
-
+using System.Linq.Expressions;
 
 namespace ApiCatalogo.Repositories
 {
@@ -16,10 +12,9 @@ namespace ApiCatalogo.Repositories
             _context = context;
         }
 
-        public IEnumerator<T> GetAll()
+        public IEnumerable<T> GetAll()
         {
-            var list = _context.Set<T>().ToList();
-            return (IEnumerator<T>)list;
+            return _context.Set<T>();
         }
         public T? Get(Expression<Func<T, bool>> predicate)
         {
@@ -31,18 +26,19 @@ namespace ApiCatalogo.Repositories
             _context.SaveChanges();
             return entity;
         }
-
-        public T Delete(T entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public T Update(T entity)
         {
+            // _context.Entry(entity).State = EntityState.Modified;
             _context.Set<T>().Update(entity);
-            _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
             return entity;
         }
+        public T Delete(T entity)
+        {
+            _context.Set<T>().Remove(entity);
+            _context.SaveChanges();
+            return entity;
+        }
+
     }
 }

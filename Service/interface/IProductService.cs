@@ -9,6 +9,7 @@ namespace ApiCatalogo.Service
         Product Create(Product product);
         Product Update(Product product);
         Product Delete(int id);
+        IEnumerable<Product> GetProductByCategory(int id);
 
     }
 }

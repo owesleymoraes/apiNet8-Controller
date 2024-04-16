@@ -3,13 +3,9 @@ using apicatalogo.Models;
 
 namespace ApiCatalogo.Repositories
 {
-    public interface IProductRepository
+    public interface IProductRepository : IRepository<Product>
     {
-        IQueryable<Product> GetProducts();
-        Product GetProductById(int id);
-        Product Create(Product product);
-        Product Update(Product product);
-        Product Delete(int id);
+        IEnumerable<Product> GetProductsByCategory(int id);
 
     }
 }

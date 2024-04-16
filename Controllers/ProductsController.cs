@@ -81,7 +81,21 @@ namespace ApiCatalogo.Controllers
             return Ok(deleteProduct);
 
         }
-    }
 
+        [HttpGet("products/{id}")]
+        public ActionResult<IEnumerable<Product>> GetProductAndCategoryById(int id)
+        {
+            var product = _service.GetProductByCategory(id);
+
+            if (product == null)
+            {
+                return BadRequest("Id informado não corresponde a nenhum produto.");
+            }
+
+            return Ok(product);
+
+        }
+
+    }
 
 }
