@@ -1,17 +1,18 @@
 
 
 using apicatalogo.Models;
+using ApiCatalogo.DTOs;
 
 namespace ApiCatalogo.Service
 {
     public interface ICategoryService
     {
-        IEnumerable<Category> GetCategories();
-        Category GetCategory(int id);
-        Category Create(Category category);
-        Category Update(Category category);
-        Category Delete(int id);
-        IEnumerable<Category> GetCategoriesAndProducts();
+        IEnumerable<CategoryResponse> GetCategories();
+        CategoryResponse GetCategory(int id);
+        CategoryResponse Create(CategoryRequest category);
+        CategoryResponse Update(CategoryRequest category);
+        CategoryResponse Delete(int id);
+        IEnumerable<CategoryResponse> GetCategoriesAndProducts();
 
     }
 }
