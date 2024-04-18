@@ -1,6 +1,7 @@
 
-using apicatalogo.Models;
-using ApiCatalogo.Repositories;
+using ApiCatalogo.DTOs;
+using ApiCatalogo.DTOs.Mappings;
+
 
 namespace ApiCatalogo.Service
 {
@@ -14,48 +15,73 @@ namespace ApiCatalogo.Service
 
         }
 
-
-        public IEnumerable<Category> GetCategories()
+        public IEnumerable<CategoryResponse> GetCategories()
         {
-            return _uof.CategoryRepository.GetAll();
+            var categories = _uof.CategoryRepository.GetAll();
+
+            if (categories is null)
+            {
+                return null;
+            }
+
+            var categoriesList = categories.ToCategoryDTOList();
+
+            return categoriesList;
         }
-        public Category GetCategory(int id)
-        {
-            return _uof.CategoryRepository.Get(c => c.CategoryId == id);
-
-        }
-        public Category Create(Category category)
-        {
-            _ = category ?? throw new ArgumentNullException(nameof(category));
-
-            var categoryResponse = _uof.CategoryRepository.Create(category);
-            _uof.Commit();
-
-            return categoryResponse;
-        }
-        public Category Update(Category category)
-        {
-            _ = category ?? throw new ArgumentNullException(nameof(category));
-
-            var categoryResponse = _uof.CategoryRepository.Update(category);
-            _uof.Commit();
-
-            return categoryResponse;
-        }
-        public Category Delete(int id)
+        public CategoryResponse GetCategory(int id)
         {
             var category = _uof.CategoryRepository.Get(c => c.CategoryId == id);
             _ = category ?? null;
 
-            var categoryResponse = _uof.CategoryRepository.Delete(category!);
-            _uof.Commit();
+            var categoryResponse = category.ToCategoryDTO();
 
             return categoryResponse;
         }
-
-        public IEnumerable<Category> GetCategoriesAndProducts()
+        public CategoryResponse Create(CategoryRequest categoryDto)
         {
-            return _uof.CategoryRepository.GetCategoriesAndProducts();
+            _ = categoryDto ?? throw new ArgumentNullException(nameof(categoryDto));
+
+            var category = categoryDto.ToCategory();
+
+            var categoryEntity = _uof.CategoryRepository.Create(category);
+            _uof.Commit();
+
+            var categoryResponse = categoryEntity.ToCategoryDTO();
+
+            return categoryResponse;
+        }
+        public CategoryResponse Update(CategoryRequest categoryDto)
+        {
+            _ = categoryDto ?? throw new ArgumentNullException(nameof(categoryDto));
+
+            var category = categoryDto.ToCategory();
+
+            var categoryEntity = _uof.CategoryRepository.Update(category);
+            _uof.Commit();
+
+            var categoryResponse = categoryEntity.ToCategoryDTO();
+
+            return categoryResponse;
+        }
+        public CategoryResponse Delete(int id)
+        {
+            var category = _uof.CategoryRepository.Get(c => c.CategoryId == id);
+            _ = category ?? null;
+
+            var categoryEntity = _uof.CategoryRepository.Delete(category!);
+            _uof.Commit();
+
+            var categoryResponse = categoryEntity.ToCategoryDTO();
+
+            return categoryResponse;
+        }
+        public IEnumerable<CategoryResponse> GetCategoriesAndProducts()
+        {
+            var categories = _uof.CategoryRepository.GetCategoriesAndProducts();
+
+            var categoriesList = categories.ToCategoryDTOList();
+
+            return categoriesList;
         }
     }
 }

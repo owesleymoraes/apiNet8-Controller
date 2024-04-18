@@ -1,4 +1,5 @@
 using apicatalogo.Models;
+using ApiCatalogo.DTOs;
 using ApiCatalogo.Filters;
 using ApiCatalogo.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace ApiCatalogo.Controllers
 
         [HttpGet]
         [ServiceFilter(typeof(ApiLoggingFilter))]
-        public ActionResult<IEnumerable<Category>> Get()
+        public ActionResult<IEnumerable<CategoryResponse>> Get()
         {
             var categories = _service.GetCategories();
 
@@ -28,7 +29,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet("{id}", Name = "GetCategoryById")]
-        public ActionResult<Category> Get(int id)
+        public ActionResult<CategoryResponse> Get(int id)
         {
             var category = _service.GetCategory(id);
 
@@ -39,18 +40,18 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Category category)
+        public ActionResult<CategoryResponse> Post(CategoryRequest category)
         {
             if (category is null)
                 return BadRequest();
 
-            Category categoryModel = _service.Create(category);
+            CategoryResponse categoryModel = _service.Create(category);
 
             return new CreatedAtRouteResult("GetCategoryById", new { id = categoryModel.CategoryId }, categoryModel);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, Category category)
+        public ActionResult<CategoryResponse> Put(int id, CategoryRequest category)
         {
             if (id != category.CategoryId)
             {
