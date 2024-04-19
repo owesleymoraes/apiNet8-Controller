@@ -1,3 +1,4 @@
+using ApiCatalogo.DTOs;
 using apicatalogo.Models;
 using ApiCatalogo.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Product>> Get()
+        public ActionResult<IEnumerable<ProductDTO>> Get()
         {
 
             var products = _service.GetProducts().ToList();
@@ -25,7 +26,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet("{id:min(1)}", Name = "GetById")]
-        public ActionResult<Product> Get(int id)
+        public ActionResult<ProductDTO> Get(int id)
         {
             var product = _service.GetProductById(id);
 
@@ -37,20 +38,20 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Product product)
+        public ActionResult<ProductDTO> Post(ProductDTO productDTO)
         {
-            if (product is null)
+            if (productDTO is null)
             {
                 return BadRequest();
             }
 
-            Product productResponse = _service.Create(product);
+            ProductDTO productResponse = _service.Create(productDTO);
 
             return new CreatedAtRouteResult("GetById", new { id = productResponse.ProductId }, productResponse);
         }
 
         [HttpPut("{id}")]
-        public ActionResult Put(int id, Product product)
+        public ActionResult<ProductDTO> Put(int id, ProductDTO product)
         {
             if (id != product.ProductId)
             {
@@ -69,7 +70,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public ActionResult<ProductDTO> Delete(int id)
         {
             var deleteProduct = _service.Delete(id);
 
@@ -83,7 +84,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet("products/{id}")]
-        public ActionResult<IEnumerable<Product>> GetProductAndCategoryById(int id)
+        public ActionResult<IEnumerable<ProductDTO>> GetProductAndCategoryById(int id)
         {
             var product = _service.GetProductByCategory(id);
 
