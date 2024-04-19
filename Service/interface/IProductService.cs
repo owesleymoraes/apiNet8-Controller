@@ -1,15 +1,15 @@
-using apicatalogo.Models;
+using ApiCatalogo.DTOs;
 
 namespace ApiCatalogo.Service
 {
     public interface IProductService
     {
-        IEnumerable<Product> GetProducts();
-        Product GetProductById(int id);
-        Product Create(Product product);
-        Product Update(Product product);
-        Product Delete(int id);
-        IEnumerable<Product> GetProductByCategory(int id);
+        IEnumerable<ProductDTO> GetProducts();
+        ProductDTO GetProductById(int id);
+        ProductDTO Create(ProductDTO productDTO);
+        ProductDTO Update(ProductDTO productDTO);
+        ProductDTO Delete(int id);
+        IEnumerable<ProductDTO> GetProductByCategory(int id);
 
     }
 }
