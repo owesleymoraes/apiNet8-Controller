@@ -96,6 +96,19 @@ namespace ApiCatalogo.Controllers
             return Ok(product);
 
         }
+        [HttpGet("pagination")]
+        public ActionResult<IEnumerable<ProductDTO>> GetProductPagination([FromQuery] ProductParameters productParameters)
+        {
+            var product = _service.GetProductsPagination(productParameters);
+
+            if (product == null)
+            {
+                return BadRequest("Id informado não corresponde a nenhum produto.");
+            }
+
+            return Ok(product);
+
+        }
 
     }
 

@@ -103,3 +103,4 @@ D:\app_web\ApiNet8\ApiCatalogo\obj\Debug\net8.0\refint\ApiCatalogo.dll
 D:\app_web\ApiNet8\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.pdb
 D:\app_web\ApiNet8\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.genruntimeconfig.cache
 D:\app_web\ApiNet8\ApiCatalogo\obj\Debug\net8.0\ref\ApiCatalogo.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\AutoMapper.dll
