@@ -84,6 +84,12 @@ namespace ApiCatalogo.Service
             return response;
         }
 
+        public IEnumerable<ProductDTO> GetProductsPagination(ProductParameters productParameters)
+        {
+            var product = _uof.ProductRepository.GetProducts(productParameters);
+            var productDTO = _mapper.Map<IEnumerable<ProductDTO>>(product);
+            return productDTO;
 
+        }
     }
 }

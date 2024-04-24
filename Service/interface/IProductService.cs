@@ -10,6 +10,7 @@ namespace ApiCatalogo.Service
         ProductDTO Update(ProductDTO productDTO);
         ProductDTO Delete(int id);
         IEnumerable<ProductDTO> GetProductByCategory(int id);
+        IEnumerable<ProductDTO> GetProductsPagination(ProductParameters productParameters);
 
     }
 }

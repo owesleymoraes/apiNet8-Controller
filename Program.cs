@@ -40,6 +40,7 @@ builder.Logging.AddProvider(new CustomLoggerProvider(new CustomLoggerProviderCon
   LogLevel = LogLevel.Information
 }));
 
+
 builder.Services.AddAutoMapper(typeof(ProductDTOMappingProfile));
 
 var app = builder.Build();
