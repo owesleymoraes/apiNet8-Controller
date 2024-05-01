@@ -2,6 +2,7 @@ using apicatalogo.Models;
 using ApiCatalogo.DTOs;
 using ApiCatalogo.Filters;
 using ApiCatalogo.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiCatalogo.Controllers
@@ -20,6 +21,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ServiceFilter(typeof(ApiLoggingFilter))]
         public ActionResult<IEnumerable<CategoryResponse>> Get()
         {

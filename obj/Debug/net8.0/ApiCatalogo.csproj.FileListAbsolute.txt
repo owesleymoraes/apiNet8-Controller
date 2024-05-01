@@ -104,3 +104,11 @@ D:\app_web\ApiNet8\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.pdb
 D:\app_web\ApiNet8\ApiCatalogo\obj\Debug\net8.0\ApiCatalogo.genruntimeconfig.cache
 D:\app_web\ApiNet8\ApiCatalogo\obj\Debug\net8.0\ref\ApiCatalogo.dll
 D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\AutoMapper.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\app_web\ApiNet8\ApiCatalogo\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
