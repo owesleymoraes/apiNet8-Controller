@@ -5,6 +5,7 @@ using ApiCatalogo.DTOs.Mappings;
 using ApiCatalogo.Extensions;
 using ApiCatalogo.Filters;
 using ApiCatalogo.Logging;
+using ApiCatalogo.Models;
 using ApiCatalogo.Repositories;
 using ApiCatalogo.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,7 +26,7 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication("Bearer").AddJwtBearer();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
 AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
