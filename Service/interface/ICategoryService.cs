@@ -1,6 +1,4 @@
 
-
-using apicatalogo.Models;
 using ApiCatalogo.DTOs;
 
 namespace ApiCatalogo.Service
