@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApiCatalogo.Controllers
 {
@@ -126,7 +127,71 @@ namespace ApiCatalogo.Controllers
 
         }
 
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenModelDTO tokenModel)
+        {
+            if (tokenModel is null)
+            {
+                return BadRequest("Invalid client request");
+
+            }
+
+            string? accessToken = tokenModel.AccessToken ?? throw new ArgumentNullException(nameof(tokenModel));
+            string refreshToken = tokenModel.RefreshToken ?? throw new ArgumentException(nameof(tokenModel));
+
+            var principal = _tokenService.GetClaimsPrincipalFromExpiredToken(accessToken!, _configuration);
+
+            if (principal == null)
+            {
+                return BadRequest("Invalid access token/refresh token");
+            }
+
+            string username = principal.Identity.Name;
+
+            var user = await _userManager.FindByNameAsync(username!);
+
+            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            {
+                return BadRequest("Invalid access token/refresh token");
+            }
+
+            var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims.ToList(), _configuration);
+
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            await _userManager.UpdateAsync(user);
+
+            return new ObjectResult(new
+            {
+                accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+                refreshToken = newRefreshToken
+            });
+
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("revoke/{username}")]
+        public async Task<ActionResult> Revoke(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+            {
+                return BadRequest("Invalid user name");
+            }
+
+            user.RefreshToken = null;
+
+            await _userManager.UpdateAsync(user);
+
+            return NoContent();
+        }
+
     }
+
 
 
 }
