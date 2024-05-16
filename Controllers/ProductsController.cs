@@ -2,6 +2,7 @@ using ApiCatalogo.DTOs;
 using apicatalogo.Models;
 using ApiCatalogo.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApiCatalogo.Controllers
 {
@@ -17,6 +18,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<IEnumerable<ProductDTO>> Get()
         {
 

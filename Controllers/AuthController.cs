@@ -31,7 +31,6 @@ namespace ApiCatalogo.Controllers
 
         }
 
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginModelDTO model)
