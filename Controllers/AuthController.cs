@@ -14,21 +14,25 @@ namespace ApiCatalogo.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ITokenService _tokenService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public AuthController(ITokenService tokenService,
-         UserManager<ApplicationUser> userManager,
+
+         IConfiguration configuration,
+          ILogger<AuthController> logger,
          RoleManager<IdentityRole> roleManager,
-         IConfiguration configuration
-         )
+         UserManager<ApplicationUser> userManager
+          )
         {
-            _tokenService = tokenService;
+
+            _logger = logger;
             _userManager = userManager;
             _roleManager = roleManager;
+            _tokenService = tokenService;
             _configuration = configuration;
-
         }
 
         [HttpPost]
@@ -189,8 +193,67 @@ namespace ApiCatalogo.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        [Route("CreateRole")]
+        public async Task<ActionResult> CreateRole(string roleName)
+        {
+            var roleExist = await _roleManager.RoleExistsAsync(roleName);
+
+            if (!roleExist)
+            {
+                var roleResult = await _roleManager.CreateAsync(new IdentityRole(roleName));
+
+                if (roleResult.Succeeded)
+                {
+                    _logger.LogInformation(1, "Roles Added");
+                    return StatusCode(StatusCodes.Status200OK,
+                     new Response { Status = "Success", Message = $"Role {roleName} added successfully" });
+
+                }
+                else
+                {
+                    _logger.LogInformation(1, "Roles Added");
+                    return StatusCode(StatusCodes.Status400BadRequest,
+                     new Response { Status = "Error", Message = $"Issue adding the new {roleName} role" });
+                }
+
+            }
+
+            return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "Role already exist." });
+
+        }
+
+
+        [HttpPost]
+        [Route("AddUserToRole")]
+        public async Task<IActionResult> AddUserToRole(string email, string roleName)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null)
+            {
+                var result = await _userManager.AddToRoleAsync(user, roleName);
+
+                if (result.Succeeded)
+                {
+                    _logger.LogInformation(1, $"User {user.Email} added to the {roleName} role");
+                    return StatusCode(StatusCodes.Status200OK,
+                     new Response { Status = "Success", Message = $"User {user.Email} added to the {roleName} role" });
+
+                }
+                else
+                {
+                    _logger.LogInformation(1, $"Error: Unable to add user {user.Email} to the {roleName} role");
+                    return StatusCode(StatusCodes.Status400BadRequest,
+                     new Response { Status = "Error", Message = $"Error Unable to add user {user.Email} to the {roleName} role" });
+                }
+
+            }
+
+            return BadRequest(new { error = "Unable to find user" });
+
+        }
+
     }
-
-
 
 }
