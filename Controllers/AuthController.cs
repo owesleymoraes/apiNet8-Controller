@@ -48,6 +48,7 @@ namespace ApiCatalogo.Controllers
                 var authClaims = new List<Claim> {
                  new Claim(ClaimTypes.Name, user.UserName!),
                  new Claim(ClaimTypes.Email, user.Email!),
+                 new Claim("id", user.UserName!),
                  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
 
                 };
@@ -174,9 +175,9 @@ namespace ApiCatalogo.Controllers
 
         }
 
-        [Authorize]
         [HttpPost]
         [Route("revoke/{username}")]
+        [Authorize(Policy = "ExclusiveOnly")]
         public async Task<ActionResult> Revoke(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -195,6 +196,7 @@ namespace ApiCatalogo.Controllers
 
         [HttpPost]
         [Route("CreateRole")]
+        [Authorize(Policy = "SuperAdminOnly")]
         public async Task<ActionResult> CreateRole(string roleName)
         {
             var roleExist = await _roleManager.RoleExistsAsync(roleName);
@@ -226,6 +228,7 @@ namespace ApiCatalogo.Controllers
 
         [HttpPost]
         [Route("AddUserToRole")]
+        [Authorize(Policy = "SuperAdminOnly")]
         public async Task<IActionResult> AddUserToRole(string email, string roleName)
         {
             var user = await _userManager.FindByEmailAsync(email);
