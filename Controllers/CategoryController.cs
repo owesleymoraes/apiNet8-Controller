@@ -71,6 +71,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public ActionResult<Category> Delete(int id)
         {
 

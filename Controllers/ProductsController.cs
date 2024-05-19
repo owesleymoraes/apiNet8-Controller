@@ -1,5 +1,4 @@
 using ApiCatalogo.DTOs;
-using apicatalogo.Models;
 using ApiCatalogo.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +17,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Policy = "UserOnly")]
         public ActionResult<IEnumerable<ProductDTO>> Get()
         {
 
