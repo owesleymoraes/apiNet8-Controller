@@ -4,11 +4,13 @@ using ApiCatalogo.Filters;
 using ApiCatalogo.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace ApiCatalogo.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [EnableRateLimiting("fixedwindow")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _service;
@@ -21,8 +23,9 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        // [Authorize]
         [ServiceFilter(typeof(ApiLoggingFilter))]
+        [DisableRateLimiting]
         public ActionResult<IEnumerable<CategoryResponse>> Get()
         {
             var categories = _service.GetCategories();
